@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, flash, render_template
+from flask import Flask, request, redirect, flash, render_template, session
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -32,6 +32,42 @@ class Blog(db.Model):
 
 def get_blogList():
     return Blog.query.all()
+
+@app.before_request
+def require_login():
+    allowed_routes = ['login', 'signup']
+    if request.endpoint not in allowed_routes and 'username' not in session:
+        return redirect('/login')
+
+@app.route('/login',methods=['POST', 'GET'])
+def login():
+    userN_error = ''
+    pwd_error = ''
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = User.query.filter_by(username=username).first()
+
+        if username == '':
+            userN_error = 'Username is empty'
+        if password == '':
+            pwd_error = 'Password is empty'
+
+        if user and user.password == password:
+            session['username'] = username
+            return redirect('/newpost')
+        if user and user.password != password:
+            pwd_error = 'Password is incorrect'
+        if user != '' and user == None:
+            fuserN_error = 'Username is incorrect'
+
+    return render_template('login.html',
+                            userN_error = userN_error,
+                            pwd_error = pwd_error)
+
+@app.route('/signup', methods=['POST', 'GET'])
+def add_User():
+    return render_template('signup.html')
 
 @app.route('/addBlog', methods=['POST'])
 def add_Blog():
