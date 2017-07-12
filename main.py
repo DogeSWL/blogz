@@ -39,6 +39,11 @@ def require_login():
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
 
+@app.route('/logout')
+def logout():
+    del session['username']
+    return redirect('/')
+
 @app.route('/login',methods=['POST', 'GET'])
 def login():
     userN_error = ''
@@ -49,25 +54,58 @@ def login():
         user = User.query.filter_by(username=username).first()
 
         if username == '':
-            userN_error = 'Username is empty'
+            userN_error = 'Username required'
         if password == '':
-            pwd_error = 'Password is empty'
+            pwd_error = 'Password required'
 
         if user and user.password == password:
             session['username'] = username
             return redirect('/newpost')
         if user and user.password != password:
             pwd_error = 'Password is incorrect'
-        if user != '' and user == None:
-            fuserN_error = 'Username is incorrect'
+        if username != '' and not user:
+            userN_error = 'Username is incorrect'
 
     return render_template('login.html',
                             userN_error = userN_error,
                             pwd_error = pwd_error)
 
 @app.route('/signup', methods=['POST', 'GET'])
-def add_User():
-    return render_template('signup.html')
+def signup():
+    signUp_user_error = ''
+    signUp_pass_error = ''
+    signUp_vpass_error = ''
+
+    if request.method == 'POST':
+        su_username = request.form['username']
+        su_password = request.form['password']
+        su_vpassword = request.form['verifyPass']
+
+        # checks if inputs in forms are filled
+        # if request returns empty correct error would be displayed
+        if su_username == '':
+            signUp_user_error = 'Username required'
+        if su_password == '':
+            signUp_pass_error = 'Password required'
+        if su_vpassword == '':
+            signUp_vpass_error = 'Verify Pass required'
+        if  (su_password != '') and (su_vpassword != '') and (su_vpassword != su_password):
+            signUp_vpass_error = 'Password and Verify Pass does not match'
+
+        # commit to db if username & password is filld and password & verify pass is the same
+        # after committing redirect to login page
+        if (su_username != '') and (su_password != '') and (su_password == su_vpassword):
+            user = User(username=su_username, password=su_password)
+            db.session.add(user)
+            db.session.commit()
+            return redirect('/login')
+
+    return render_template('signup.html',
+                            signUp_user_error = signUp_user_error,
+                            signUp_pass_error = signUp_pass_error,
+                            signUp_vpass_error = signUp_vpass_error)
+
+
 
 @app.route('/addBlog', methods=['POST'])
 def add_Blog():

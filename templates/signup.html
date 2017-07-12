@@ -2,7 +2,26 @@
 {% block content %}
 <h1>Sign Up</h1>
 <form action="" method="post">
-
+   <p class="error">{{signUp_user_error}}</p>
+   <p class="error">{{signUp_pass_error}}</p>
+   <p class="error">{{signUp_vpass_error}}</p>
+   <table>
+      <tr>
+         <td><label for="username">Username:</label></td>
+         <td><input type="text" name="username"></td>
+      </tr>
+      <tr>
+         <td><label for="password">Password:</label></td>
+         <td><input type="password" name="password"></td>
+      </tr>
+      <tr>
+         <td><label for="verifyPass">Verify Pass:</label></td>
+         <td><input type="password" name="verifyPass"></td>
+      </tr>
+   </table>
+   <input class="setBox_size" type="submit" value="Create Account">
 </form>
+
+<a href="/login"><button>Return to Login</button></a>
 
 {% endblock %}
