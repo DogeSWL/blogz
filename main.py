@@ -25,10 +25,10 @@ class Blog(db.Model):
     body = db.Column(db.String(120))
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    def __init__(self, title, body, owner):
+    def __init__(self, title, body, owner_id):
         self.title = title
         self.body = body
-        self.owner = owner
+        self.owner_id = owner_id
 
 def get_blogList():
     return Blog.query.all()
@@ -75,11 +75,20 @@ def signup():
     signUp_user_error = ''
     signUp_pass_error = ''
     signUp_vpass_error = ''
+    signUp_invalid_error = ''
 
     if request.method == 'POST':
         su_username = request.form['username']
         su_password = request.form['password']
         su_vpassword = request.form['verifyPass']
+
+        user_check = User.query.filter_by(username=su_username).first()
+
+        # checks if there is input for username and if username is already in db
+        # if both are true, 'username taken' error would display
+        if su_username != '' and user_check:
+            signUp_user_error = 'Username taken'
+
 
         # checks if inputs in forms are filled
         # if request returns empty correct error would be displayed
@@ -91,6 +100,10 @@ def signup():
             signUp_vpass_error = 'Verify Pass required'
         if  (su_password != '') and (su_vpassword != '') and (su_vpassword != su_password):
             signUp_vpass_error = 'Password and Verify Pass does not match'
+        # checks to see if either password or username is less than 3 leters
+        # if true, error would display
+        if (su_password != '' or su_username != '') and (len(su_password) < 3 or len(su_username) < 3):
+            signUp_invalid_error = 'Either username or password is invalid'
 
         # commit to db if username & password is filld and password & verify pass is the same
         # after committing redirect to login page
@@ -103,7 +116,8 @@ def signup():
     return render_template('signup.html',
                             signUp_user_error = signUp_user_error,
                             signUp_pass_error = signUp_pass_error,
-                            signUp_vpass_error = signUp_vpass_error)
+                            signUp_vpass_error = signUp_vpass_error,
+                            signUp_invalid_error = signUp_invalid_error)
 
 
 
@@ -111,6 +125,9 @@ def signup():
 def add_Blog():
     new_blogTitle = request.form['blog_Title']
     new_blogEntry = request.form['blog_NewEntry']
+
+    # grab current user
+    owner = User.query.filter_by(username=session['username']).first()
 
     title_Error = ''
     entry_Error = ''
@@ -125,14 +142,10 @@ def add_Blog():
                                 title_Error = title_Error,
                                 entry_Error = entry_Error)
     else:
-        blog = Blog(title=new_blogTitle, body=new_blogEntry)
+        blog = Blog(title=new_blogTitle, body=new_blogEntry, owner_id=owner.id)
         db.session.add(blog)
         db.session.commit()
 
-        # lastID = db.session.query(Blog.id).order_by(Blog.id.desc()).first()
-        #
-        # for curID in lastID:
-        #     return redirect('/blog?id'+str(curID))
         return redirect('/blog?id='+str(blog.id))
 
 @app.route("/newpost")
