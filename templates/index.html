@@ -1,0 +1,13 @@
+{% extends "blog_base.html" %}
+{% block content %}
+
+<h1>Home</h1>
+<div class="usernameBox">
+   <strong><p class="setUnderline">Users in the blog</p></strong>
+
+   {% for user in all_users %}
+   <p>{{loop.index}}. {{user.username}}</p>
+
+   {% endfor %}
+</div>
+{% endblock %}

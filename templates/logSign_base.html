@@ -12,11 +12,37 @@
          .align_R {
             text-align: right;
          }
+
+         .navSide_L {
+            width: 50%;
+            float: left;
+         }
+         .navSide_R {
+            width: 50%;
+            float: right;
+         }
+
+         .rightNav2L {
+            cursor: default;
+            text-decoration: none;
+            pointer-events: none;
+            float: right;
+            padding-left: 20px;
+         }
       </style>
       <meta charset="utf-8">
       <title>Blogz</title>
    </head>
    <body>
+      <div>
+         <div class="navSide_L">
+            <a href="/index">Home</a>
+         </div>
+         <div class="navSide_R">
+            <a class="rightNav2L" href="">Login</a>
+            <a class="rightNav2L" href="">Logout</a>
+         </div>
+      </div>
       {% block content %}
       {% endblock %}
    </body>

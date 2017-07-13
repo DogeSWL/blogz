@@ -35,14 +35,14 @@ def get_blogList():
 
 @app.before_request
 def require_login():
-    allowed_routes = ['login', 'signup']
+    allowed_routes = ['login', 'signup', 'blog', 'home']
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
 
 @app.route('/logout')
 def logout():
     del session['username']
-    return redirect('/')
+    return redirect('/blog')
 
 @app.route('/login',methods=['POST', 'GET'])
 def login():
@@ -60,7 +60,7 @@ def login():
 
         if user and user.password == password:
             session['username'] = username
-            return redirect('/newpost')
+            return redirect('/index')
         if user and user.password != password:
             pwd_error = 'Password is incorrect'
         if username != '' and not user:
@@ -153,7 +153,7 @@ def newpost_page():
     return render_template('newpost.html')
 
 @app.route('/blog', methods=['GET'])
-def blogPage():
+def blog():
     some_id = request.args.get('id') # extract the value of id
     if some_id == None: # if value of id returns None render template blog.html
         return render_template('blog.html',blogList=get_blogList())
@@ -161,9 +161,15 @@ def blogPage():
         oneBlog = Blog.query.filter_by(id=some_id).all()
         return render_template('singleBlog.html', indBlog=oneBlog)
 
+@app.route('/index')
+def home():
+    all_users = User.query.all()
+
+    return render_template('index.html', all_users=all_users)
+
 @app.route("/")
 def index():
-    return redirect('/blog')
+    return redirect('/index')
 
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RU'
 
