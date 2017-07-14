@@ -15,16 +15,17 @@
       {% endif %}
    </div>
 </div>
+<div>
+   <h1>Home</h1>
 
+   <div class="usernameBox">
+      <strong><p class="setUnderline">Users in the blog</p></strong>
 
-<h1>Home</h1>
+      {% for user in all_users %}
+      <p>{{loop.index}}. <a href="/blog?user={{user.id}}">{{user.username}}</a></p>
 
-<div class="usernameBox">
-   <strong><p class="setUnderline">Users in the blog</p></strong>
-
-   {% for user in all_users %}
-   <p>{{loop.index}}. <a href="/blog?user={{user.id}}">{{user.username}}</a></p>
-
-   {% endfor %}
+      {% endfor %}
+   </div>
 </div>
+
 {% endblock %}

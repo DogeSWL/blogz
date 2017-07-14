@@ -3,7 +3,9 @@
 
 <div>
    <div class="navSide_L">
-      <a href="/index">Home</a>
+      <span>
+         <a href="/index">Home</a> / <a class="unClickable" href="/blog">Blogs</a>
+      </span>
    </div>
    <div class="navSide_R">
       {% if sessionCheck == "True" %}
@@ -13,14 +15,16 @@
       {% endif %}
    </div>
 </div>
-
-<h1>Build a Blog</h1>
 <div>
+   <h1>Build a Blog</h1>
+   {% if sessionCheck == "True" %}
+   <p><a href="/newpost"><button>Create New Blog</button></a></p>
+   {% endif %}
    {% for blog in blogList: %}
    <a href="/blog?id={{blog.id}}">{{blog.title}}</a>
-   <!-- <a href=/blog/{{blog.id}}>{{blog.title}}</a> -->
    <p>{{blog.body}}</p>
    <hr>
    {% endfor %}
 </div>
+
 {% endblock %}

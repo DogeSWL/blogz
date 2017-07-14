@@ -155,7 +155,8 @@ def add_Blog():
 
 @app.route("/newpost")
 def newpost_page():
-    return render_template('newpost.html')
+    return render_template('newpost.html',
+                            sessionCheck=checkSession())
 
 @app.route('/blog', methods=['GET'])
 def blog():
