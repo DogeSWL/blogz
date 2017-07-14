@@ -33,6 +33,13 @@ class Blog(db.Model):
 def get_blogList():
     return Blog.query.all()
 
+def checkSession():
+    if session:
+        return 'True'
+    else:
+        return 'False'
+
+
 @app.before_request
 def require_login():
     allowed_routes = ['login', 'signup', 'blog', 'home']
@@ -119,8 +126,6 @@ def signup():
                             signUp_vpass_error = signUp_vpass_error,
                             signUp_invalid_error = signUp_invalid_error)
 
-
-
 @app.route('/addBlog', methods=['POST'])
 def add_Blog():
     new_blogTitle = request.form['blog_Title']
@@ -154,18 +159,36 @@ def newpost_page():
 
 @app.route('/blog', methods=['GET'])
 def blog():
+
     some_id = request.args.get('id') # extract the value of id
+    userID = request.args.get('user')
+
+    if userID:
+        userPage_blogs = Blog.query.filter_by(owner_id=userID)
+        userPage_username = User.query.filter_by(id=userID).first()
+        return render_template('singleUser.html',
+                                userPage_blogs=userPage_blogs,
+                                userPage_username=userPage_username,
+                                sessionCheck=checkSession())
+
     if some_id == None: # if value of id returns None render template blog.html
-        return render_template('blog.html',blogList=get_blogList())
+        return render_template('blog.html',
+                                blogList=get_blogList(),
+                                sessionCheck=checkSession())
     else:
         oneBlog = Blog.query.filter_by(id=some_id).all()
-        return render_template('singleBlog.html', indBlog=oneBlog)
+        return render_template('singleBlog.html',
+                                indBlog=oneBlog,
+                                sessionCheck=checkSession())
 
 @app.route('/index')
 def home():
     all_users = User.query.all()
+    # sessionCheck = checkSession()
 
-    return render_template('index.html', all_users=all_users)
+    return render_template('index.html',
+                            all_users=all_users,
+                            sessionCheck=checkSession())
 
 @app.route("/")
 def index():

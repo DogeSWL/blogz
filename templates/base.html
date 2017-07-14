@@ -13,6 +13,11 @@
             text-align: right;
          }
 
+         .navFull {
+            width: 100%;
+            float: left;
+         }
+
          .navSide_L {
             width: 50%;
             float: left;
@@ -23,26 +28,37 @@
          }
 
          .rightNav2L {
-            cursor: default;
-            text-decoration: none;
-            pointer-events: none;
             float: right;
             padding-left: 20px;
          }
+
+         .usernameBox {
+            width: 200px;
+            margin: 0 auto;
+         }
+
+         .setUnderline {
+            text-decoration: underline;
+         }
+
+         .unClickable {
+            text-decoration: none;
+            cursor: default;
+            color: black;
+         }
+
+         .blogContainer {
+            width: 50%;
+            margin: 0 auto;
+         }
+
+
+
       </style>
       <meta charset="utf-8">
       <title>Blogz</title>
    </head>
    <body>
-      <div>
-         <div class="navSide_L">
-            <a href="/index">Home</a>
-         </div>
-         <div class="navSide_R">
-            <a class="rightNav2L" href="">Login</a>
-            <a class="rightNav2L" href="">Logout</a>
-         </div>
-      </div>
       {% block content %}
       {% endblock %}
    </body>

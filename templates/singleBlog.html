@@ -1,5 +1,20 @@
-{% extends "blog_base.html" %}
+{% extends "base.html" %}
 {% block content %}
+
+<div>
+   <div class="navSide_L">
+      <span>
+         <a href="/index">Home</a> / <a href="/blog">Blogs</a>
+      </span>
+   </div>
+   <div class="navSide_R">
+      {% if sessionCheck == "True" %}
+      <a class="rightNav2L" href="/logout">Logout</a>
+      {% else %}
+      <a class="rightNav2L" href="/login">Login</a>
+      {% endif %}
+   </div>
+</div>
 
 {% for blog in indBlog: %}
 <h1>{{blog.title}}</h1>

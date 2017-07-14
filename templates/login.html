@@ -1,7 +1,13 @@
-{% extends "logSign_base.html" %}
+{% extends "base.html" %}
 {% block content %}
+<div>
+   <div class="navFull">
+      <a href="/index">Home</a>
+   </div>
+</div>
 
 <h1>Login</h1>
+
 <form action="/login" method="post">
    <p class="error">{{userN_error}}</p>
    <p class="error">{{pwd_error}}</p>
