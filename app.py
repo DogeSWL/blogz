@@ -6,4 +6,6 @@ app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:MyNewPass@localhost:8889/blogz'
 app.config['SQLALCHEMY_ECHO'] = True
 
+app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RU'
+
 db = SQLAlchemy(app)
