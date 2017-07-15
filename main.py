@@ -67,7 +67,8 @@ def signup():
         # if both are true, 'username taken' error would display
         if su_username != '' and user_check:
             signUp_user_error = 'Username taken'
-
+            return render_template('signup.html',
+                                    signUp_user_error=signUp_user_error)
 
         # checks if inputs in forms are filled
         # if request returns empty correct error would be displayed
