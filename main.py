@@ -1,6 +1,7 @@
 from flask import request, redirect, flash, render_template, session
 from models import User, Blog
 from app import app, db
+from views.login import login
 
 def get_blogList():
     return Blog.query.all()
@@ -23,31 +24,31 @@ def logout():
     del session['username']
     return redirect('/blog')
 
-@app.route('/login',methods=['POST', 'GET'])
-def login():
-    userN_error = ''
-    pwd_error = ''
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        user = User.query.filter_by(username=username).first()
-
-        if username == '':
-            userN_error = 'Username required'
-        if password == '':
-            pwd_error = 'Password required'
-
-        if user and user.password == password:
-            session['username'] = username
-            return redirect('/index')
-        if user and user.password != password:
-            pwd_error = 'Password is incorrect'
-        if username != '' and not user:
-            userN_error = 'Username is incorrect'
-
-    return render_template('login.html',
-                            userN_error = userN_error,
-                            pwd_error = pwd_error)
+# @app.route('/login',methods=['POST', 'GET'])
+# def login():
+#     userN_error = ''
+#     pwd_error = ''
+#     if request.method == 'POST':
+#         username = request.form['username']
+#         password = request.form['password']
+#         user = User.query.filter_by(username=username).first()
+#
+#         if username == '':
+#             userN_error = 'Username required'
+#         if password == '':
+#             pwd_error = 'Password required'
+#
+#         if user and user.password == password:
+#             session['username'] = username
+#             return redirect('/index')
+#         if user and user.password != password:
+#             pwd_error = 'Password is incorrect'
+#         if username != '' and not user:
+#             userN_error = 'Username is incorrect'
+#
+#     return render_template('login.html',
+#                             userN_error = userN_error,
+#                             pwd_error = pwd_error)
 
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
