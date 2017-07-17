@@ -17,9 +17,9 @@
 </div>
 
 
-<h1>{{userPage_username.username}}'s Blogs</h1>
+<h1>{{userData.username}}'s Blogs</h1>
 
-{% for blog in userPage_blogs: %}
+{% for blog in blogData: %}
 <div class="blogContainer">
    <h2>{{blog.title}}</h1>
    <p>{{blog.body}}</p>
