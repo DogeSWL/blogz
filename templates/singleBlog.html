@@ -16,11 +16,11 @@
    </div>
 </div>
 
-{% for blog in indBlog: %}
 <div class="blogContainer">
-   <h1>{{blog.title}}</h1>
-   <p>{{blog.body}}</p>
+   <h1>{{oneBlog.title}}</h1>
+   <p>{{oneBlog.body}}</p>
+   <p>Posted by: {{oneUser.username}}</p>
 </div>
-{% endfor %}
+
 
 {% endblock %}
