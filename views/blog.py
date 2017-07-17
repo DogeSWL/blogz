@@ -19,7 +19,7 @@ def blog():
     userID = request.args.get('user')
 
     if userID:
-        blogData = Blog.query.filter_by(owner_id=userID)
+        blogData = Blog.query.filter_by(owner_id=userID).all()
         oneUser = User.query.filter_by(id=userID).first()
 
         return render_template('singleUser.html',
@@ -34,7 +34,7 @@ def blog():
                                 blogList=get_blogData_all(),
                                 sessionCheck=checkSession())
     else:
-        oneBlog = Blog.query.filter_by(id=blogID).first()
+        oneBlog = Blog.query.filter_by(owner_id=blogID).first()
         oneUser = User.query.filter_by(id=blogID).first()
 
         return render_template('singleBlog.html',
