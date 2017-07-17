@@ -6,8 +6,8 @@ from views.login import login
 from views.signup import signup
 from views.addBlog import addBlog
 
-def get_blogList():
-    return db.engine.execute('''SELECT user.username AS username, blog.title as title, blog.body as body
+def get_blogData_all():
+    return db.engine.execute('''SELECT user.id AS id, user.username AS username, blog.title as title, blog.body as body
                                 FROM blog
                                 LEFT JOIN user ON user.id = blog.owner_id''')
 
@@ -38,8 +38,8 @@ def blog():
     some_id = request.args.get('id') # extract the value of id
     userID = request.args.get('user')
 
-    # blogData = Blog.query.filter_by(owner_id=userID)
-    # userData = User.query.filter_by(id=userID).first()
+    blogData = Blog.query.filter_by(owner_id=userID)
+    userData = User.query.filter_by(id=userID).first()
 
     if userID:
         return render_template('singleUser.html',
@@ -51,7 +51,7 @@ def blog():
 
 
         return render_template('blog.html',
-                                blogList=get_blogList(),
+                                blogList=get_blogData_all(),
                                 sessionCheck=checkSession())
     else:
         oneBlog = Blog.query.filter_by(id=some_id).all()
