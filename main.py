@@ -2,6 +2,7 @@ from flask import request, redirect, flash, render_template, session
 from models import User, Blog
 from app import app, db
 from views.login import login
+from views.signup import signup
 
 def get_blogList():
     return Blog.query.all()
@@ -23,82 +24,6 @@ def require_login():
 def logout():
     del session['username']
     return redirect('/blog')
-
-# @app.route('/login',methods=['POST', 'GET'])
-# def login():
-#     userN_error = ''
-#     pwd_error = ''
-#     if request.method == 'POST':
-#         username = request.form['username']
-#         password = request.form['password']
-#         user = User.query.filter_by(username=username).first()
-#
-#         if username == '':
-#             userN_error = 'Username required'
-#         if password == '':
-#             pwd_error = 'Password required'
-#
-#         if user and user.password == password:
-#             session['username'] = username
-#             return redirect('/index')
-#         if user and user.password != password:
-#             pwd_error = 'Password is incorrect'
-#         if username != '' and not user:
-#             userN_error = 'Username is incorrect'
-#
-#     return render_template('login.html',
-#                             userN_error = userN_error,
-#                             pwd_error = pwd_error)
-
-@app.route('/signup', methods=['POST', 'GET'])
-def signup():
-    signUp_user_error = ''
-    signUp_pass_error = ''
-    signUp_vpass_error = ''
-    signUp_invalid_error = ''
-
-    if request.method == 'POST':
-        su_username = request.form['username']
-        su_password = request.form['password']
-        su_vpassword = request.form['verifyPass']
-
-        user_check = User.query.filter_by(username=su_username).first()
-
-        # checks if there is input for username and if username is already in db
-        # if both are true, 'username taken' error would display
-        if su_username != '' and user_check:
-            signUp_user_error = 'Username taken'
-            return render_template('signup.html',
-                                    signUp_user_error=signUp_user_error)
-
-        # checks if inputs in forms are filled
-        # if request returns empty correct error would be displayed
-        if su_username == '':
-            signUp_user_error = 'Username required'
-        if su_password == '':
-            signUp_pass_error = 'Password required'
-        if su_vpassword == '':
-            signUp_vpass_error = 'Verify Pass required'
-        if  (su_password != '') and (su_vpassword != '') and (su_vpassword != su_password):
-            signUp_vpass_error = 'Password and Verify Pass does not match'
-        # checks to see if either password or username is less than 3 leters
-        # if true, error would display
-        if (su_password != '' or su_username != '') and (len(su_password) < 3 or len(su_username) < 3):
-            signUp_invalid_error = 'Either username or password is invalid'
-
-        # commit to db if username & password is filld and password & verify pass is the same
-        # after committing redirect to login page
-        if (su_username != '') and (su_password != '') and (su_password == su_vpassword):
-            user = User(username=su_username, password=su_password)
-            db.session.add(user)
-            db.session.commit()
-            return redirect('/login')
-
-    return render_template('signup.html',
-                            signUp_user_error = signUp_user_error,
-                            signUp_pass_error = signUp_pass_error,
-                            signUp_vpass_error = signUp_vpass_error,
-                            signUp_invalid_error = signUp_invalid_error)
 
 @app.route('/addBlog', methods=['POST'])
 def add_Blog():

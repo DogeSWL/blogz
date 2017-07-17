@@ -19,7 +19,7 @@ def login():
 
         if user and user.password == password:
             session['username'] = username
-            return redirect('/index')
+            return redirect('/newpost')
         if user and user.password != password:
             pwd_error = 'Password is incorrect'
         if username != '' and not user:
