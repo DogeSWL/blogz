@@ -21,7 +21,7 @@
    <p><a href="/newpost"><button>Create New Blog</button></a></p>
    {% endif %}
    {% for blog in blogList: %}
-   <a href="/blog?id={{blog.id}}">{{blog.title}}</a>
+   <a href="/blog?id={{blog.blog_id}}">{{blog.title}}</a>
    <p>{{blog.body}}</p>
    <p>Posted by: {{blog.username}}</p>
    <hr>

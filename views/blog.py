@@ -3,7 +3,7 @@ from models import User, Blog
 from app import app, db
 
 def get_blogData_all():
-    return db.engine.execute('''SELECT user.id AS id, user.username AS username, blog.title as title, blog.body as body
+    return db.engine.execute('''SELECT user.id AS id, user.username AS username, blog.id as blog_id, blog.title as title, blog.body as body
                                 FROM blog
                                 LEFT JOIN user ON user.id = blog.owner_id''')
 
@@ -34,8 +34,8 @@ def blog():
                                 blogList=get_blogData_all(),
                                 sessionCheck=checkSession())
     else:
-        oneBlog = Blog.query.filter_by(owner_id=blogID).first()
-        oneUser = User.query.filter_by(id=blogID).first()
+        oneBlog = Blog.query.filter_by(id=blogID).first()
+        oneUser = User.query.filter_by(id=oneBlog.owner_id).first()
 
         return render_template('singleBlog.html',
                                 oneBlog=oneBlog,
