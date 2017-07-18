@@ -3,12 +3,14 @@ from app import db
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120), unique=True)
-    password = db.Column(db.String(120))
+    hashSalt = db.Column(db.String(120))
+    hashpwd = db.Column(db.String(120))
     blogs = db.relationship('Blog', backref='owner')
 
-    def __init__(self, username, password):
+    def __init__(self, username, hashSalt, hashpwd):
         self.username = username
-        self.password = password
+        self.hashSalt = hashSalt
+        self.hashpwd = hashpwd
 
 
 class Blog(db.Model):

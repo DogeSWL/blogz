@@ -2,6 +2,8 @@ from flask import request, redirect, render_template
 from models import User
 from app import app, db
 
+import bcrypt
+
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
     signUp_user_error = ''
@@ -41,7 +43,13 @@ def signup():
         # commit to db if username & password is filld and password & verify pass is the same
         # after committing redirect to login page
         if (su_username) and (su_password) and (su_vpassword) and (su_password == su_vpassword) and (signUp_invalid_error == ''):
-            user = User(username=su_username, password=su_password)
+
+            # generate salt
+            pwdSalt = bcrypt.gensalt()
+            # hash password
+            hashed = bcrypt.hashpw(str.encode(su_password),pwdSalt)
+
+            user = User(username=su_username, hashSalt=pwdSalt, hashpwd=hashed)
             db.session.add(user)
             db.session.commit()
             return redirect('/login')
