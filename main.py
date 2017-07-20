@@ -1,6 +1,6 @@
 from flask import request, redirect, flash, render_template, session
-from models import User, Blog
 from app import app, db
+from models import User, Blog
 
 # importing views
 from views.login import login

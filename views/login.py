@@ -1,6 +1,6 @@
 from flask import request, redirect, render_template, session
-from models import User
 from app import app
+from models import User
 
 import bcrypt
 
@@ -14,31 +14,38 @@ def login():
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
 
-        # if not encoded will cause =>
-        # TypeError: Unicode-objects must be encoded before hashing
-        testpw = str.encode(password)
-        testsalt = str.encode(user.hashSalt)
-        testhashpw = bcrypt.hashpw(testpw, testsalt)
-
-        # convert from bytes to str
-        salted_inputpwd = testhashpw.decode('utf-8')
-
-        print(salted_inputpwd)
-        print(user.hashpwd)
-
         if username == '':
             userN_error = 'Username required'
         if password == '':
             pwd_error = 'Password required'
 
-        if user and user.hashpwd == salted_inputpwd:
-            session['username'] = username
-            return redirect('/newpost')
-        if user and user.hashpwd != salted_inputpwd:
-            pwd_error = 'Password is incorrect'
-        if username != '' and not user:
-            userN_error = 'Username is incorrect'
+        if userN_error or pwd_error:
+            return render_template('login.html',
+                                    userN_error = userN_error,
+                                    pwd_error = pwd_error)
 
-    return render_template('login.html',
-                            userN_error = userN_error,
-                            pwd_error = pwd_error)
+        else:
+            if not user:
+                userN_error = 'Username is incorrect'
+                return render_template('login.html',
+                                        userN_error=userN_error)
+
+            # if not encoded will cause =>
+            # TypeError: Unicode-objects must be encoded before hashing
+            testpw = str.encode(password)
+            testsalt = str.encode(user.hashSalt)
+            testhashpw = bcrypt.hashpw(testpw, testsalt)
+
+            # convert from bytes to str
+            salted_inputpwd = testhashpw.decode('utf-8')
+
+            if user and user.hashpwd != salted_inputpwd:
+                pwd_error = 'Password is incorrect'
+                return render_template('login.html',
+                                        pwd_error = pwd_error)
+
+            if user and user.hashpwd == salted_inputpwd:
+                session['username'] = username
+                return redirect('/newpost')
+
+    return render_template('login.html')
